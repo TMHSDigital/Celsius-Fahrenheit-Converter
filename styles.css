@@ -1,19 +1,19 @@
 :root {
-    --cold-color: #00c6ff;
-    --hot-color: #ff3c00;
-    --neutral-color: #7e57c2;
-    --background-dark: #0a0e17;
-    --surface-color: rgba(255, 255, 255, 0.03);
+    --cold-color: #0088ff;
+    --hot-color: #ff4500;
+    --neutral-color: #8a67d8;
+    --background-dark: #06080f;
+    --surface-color: rgba(255, 255, 255, 0.05);
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.7);
-    --frost-glow: 0 0 30px rgba(0, 198, 255, 0.5);
-    --heat-glow: 0 0 30px rgba(255, 60, 0, 0.5);
-    --neutral-glow: 0 0 20px rgba(126, 87, 194, 0.4);
-    --frost-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-    --heat-gradient: linear-gradient(135deg, #ff3c00 0%, #ff9e00 100%);
-    --neutral-gradient: linear-gradient(135deg, #7e57c2 0%, #4527a0 100%);
-    --glass-effect: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    --frost-glow: 0 0 30px rgba(0, 136, 255, 0.6);
+    --heat-glow: 0 0 30px rgba(255, 69, 0, 0.6);
+    --neutral-glow: 0 0 20px rgba(138, 103, 216, 0.5);
+    --frost-gradient: linear-gradient(135deg, #0088ff 0%, #0055ff 100%);
+    --heat-gradient: linear-gradient(135deg, #ff4500 0%, #ff8c00 100%);
+    --neutral-gradient: linear-gradient(135deg, #8a67d8 0%, #5e35b1 100%);
+    --glass-effect: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.15);
     --panel-blur: blur(12px);
 }
 
@@ -821,7 +821,7 @@ footer {
 /* Add this in the CSS file */
 .particle {
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
     pointer-events: none;
     animation: floatAround linear infinite;
@@ -855,4 +855,79 @@ footer {
     justify-content: center;
     overflow: hidden;
     background-color: var(--background-dark);
+}
+
+/* Enhance info panel for better readability */
+.info-overlay {
+    background: rgba(6, 8, 15, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.info-content h1 {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(138, 103, 216, 0.5);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #0088ff, #8a67d8, #ff4500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.info-description {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Enhance interactive elements for better contrast */
+.interaction-panel {
+    background: rgba(10, 14, 25, 0.85);
+    border: 1px solid rgba(138, 103, 216, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.scale-btn {
+    background: rgba(10, 14, 25, 0.9);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.scale-btn.active {
+    background: var(--neutral-gradient);
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.temperature-slider::-webkit-slider-thumb {
+    box-shadow: 0 0 12px rgba(138, 103, 216, 0.6);
+}
+
+.preset-btn {
+    background: rgba(138, 103, 216, 0.2);
+    border: 1px solid rgba(138, 103, 216, 0.3);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.preset-btn:hover {
+    background: rgba(138, 103, 216, 0.3);
+    border-color: rgba(138, 103, 216, 0.5);
+    box-shadow: 0 0 12px rgba(138, 103, 216, 0.2);
+}
+
+/* Make particles more visible */
+.particle {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Enhance temperature display */
+.temp-display {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+.interactive-fact span {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 } 
