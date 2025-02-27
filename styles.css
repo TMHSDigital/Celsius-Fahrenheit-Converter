@@ -47,6 +47,7 @@ body {
     overflow: hidden;
     position: relative;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.03em;
 }
 
 /* Theme Toggle Switch */
@@ -540,9 +541,12 @@ footer {
 }
 
 .temperature-value {
-    font-size: 5vh;
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 4rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #ffffff;
+    text-shadow: 0 0 15px var(--neutral-color);
+    letter-spacing: -0.02em;
     z-index: 2;
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -587,11 +591,13 @@ footer {
     border: 1px solid var(--glass-border);
     color: var(--text-secondary);
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 500;
     padding: 6px 16px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 .scale-btn:first-child {
@@ -607,6 +613,9 @@ footer {
 .scale-btn.active {
     background-color: var(--glass-effect);
     color: var(--text-primary);
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.12em;
 }
 
 .temperature-slider-container {
@@ -675,9 +684,10 @@ footer {
 }
 
 .temp-display {
-    font-size: 1.5rem;
+    font-family: 'Space Mono', 'Courier New', monospace;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     font-weight: 600;
-    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
 }
 
 .celsius {
@@ -706,6 +716,8 @@ footer {
     padding: 6px 12px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 .preset-btn:hover {
@@ -728,18 +740,23 @@ footer {
 .info-content h1 {
     font-size: 3rem;
     font-weight: 700;
-    background: linear-gradient(to right, var(--cold-color), var(--hot-color));
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #4f9fff, #ca6afb, #fc6767);
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(138, 103, 216, 0.3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .info-description {
+    font-size: 1.1rem;
     color: var(--text-secondary);
-    font-size: 1.2rem;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.08em;
+    font-weight: 300;
+    text-transform: uppercase;
 }
 
 .interactive-fact {
@@ -930,4 +947,11 @@ footer {
 .interactive-fact span {
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    font-style: italic;
+    letter-spacing: 0.03em;
+    font-weight: 300;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: rgba(138, 103, 216, 0.1);
+    border-left: 2px solid var(--neutral-color);
 } 
