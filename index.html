@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celsius-Fahrenheit Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap">
+</head>
+<body>
+    <div class="container">
+        <h1>Temperature Converter</h1>
+        <div class="converter-box">
+            <div class="input-group">
+                <input type="number" id="celsius" placeholder="Celsius" aria-label="Celsius">
+                <label for="celsius">°C</label>
+            </div>
+            
+            <div class="equals-sign">=</div>
+            
+            <div class="input-group">
+                <input type="number" id="fahrenheit" placeholder="Fahrenheit" aria-label="Fahrenheit">
+                <label for="fahrenheit">°F</label>
+            </div>
+        </div>
+        
+        <div class="formula-box">
+            <div class="formula">
+                <p><strong>Celsius to Fahrenheit:</strong> (°C × 9/5) + 32 = °F</p>
+                <p><strong>Fahrenheit to Celsius:</strong> (°F − 32) × 5/9 = °C</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Created by <a href="https://github.com/TMHSDigital" target="_blank" rel="noopener">TMHSDigital</a></p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html> 
