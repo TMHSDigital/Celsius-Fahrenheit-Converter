@@ -5,7 +5,7 @@
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
-![Responsive](https://img.shields.io/badge/responsive-yes-brightgreen)
+![Responsive](https://img.shields.io/badge/responsive-kinda-brightgreen)
 ![Maintained](https://img.shields.io/maintenance/yes/2025)
 
 A professional temperature conversion tool with interactive visual feedback. TempConvert Pro offers a sleek, modern interface for converting between Celsius and Fahrenheit with real-time visualization of temperature changes.
