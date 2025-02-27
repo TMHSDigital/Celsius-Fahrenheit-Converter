@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         physicsSimulator.updateTemperaturePhysics(celsiusTemp);
         
         // Add this line to update the visualizer
-        visualizer.updateVisualizer(celsiusTemp);
+        cosmicBackground.updateBackground(celsiusTemp);
     }
     
     function updateSliderFill() {
@@ -577,23 +577,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Right after enhanceBackground() call, add:
     const physicsSimulator = initTemperaturePhysics();
 
-    function initCosmicVisualizer() {
-        // Clean implementation of temperature-reactive background
+    function initCosmicBackground() {
+        // Clean up any existing canvases first to avoid duplicates
+        const existingCanvases = document.querySelectorAll('.cosmic-canvas, .physics-canvas');
+        existingCanvases.forEach(canvas => canvas.remove());
+        
+        // Create a single canvas for the visualization
         const canvas = document.createElement('canvas');
         canvas.className = 'cosmic-canvas';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         document.querySelector('.cosmos-container').prepend(canvas);
         
         const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
         let particles = [];
         let currentTemp = 0;
         
-        // Handle resize properly
+        // Handle resize properly with debouncing
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            createParticles(); // Recreate particles for new dimensions
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                createParticles();
+            }, 250);
         });
         
         class Particle {
@@ -602,42 +610,37 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             reset() {
-                // Position randomly but respect screen bounds
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 1.5 + 0.5;
                 this.opacity = Math.random() * 0.5 + 0.3;
-                this.speed = Math.random() * 0.4 + 0.1;
-                
-                // Set initial velocities
+                this.speedBase = Math.random() * 0.2 + 0.1;
                 this.vx = Math.random() * 0.2 - 0.1;
                 this.vy = Math.random() * 0.2 - 0.1;
             }
             
             update() {
-                // Temperature affects behavior
-                const energy = Math.abs(currentTemp) / 50;
+                // Calculate energy level based on temperature
+                const energyFactor = Math.abs(currentTemp) / 30;
+                const speed = this.speedBase * (1 + energyFactor);
                 
-                // Cold temperature: slower, more orderly movement
-                // Hot temperature: faster, more chaotic movement
+                // Update velocity based on temperature
                 if (currentTemp < 0) {
-                    this.vx += (Math.random() - 0.5) * 0.05 * energy;
-                    this.vy += (Math.random() - 0.5) * 0.05 * energy;
-                    
-                    // Dampening for cold temps
-                    this.vx *= 0.98;
-                    this.vy *= 0.98;
+                    // Cold: More orderly movement, slower
+                    this.vx = this.vx * 0.98 + (Math.random() - 0.5) * 0.02 * speed;
+                    this.vy = this.vy * 0.98 + (Math.random() - 0.5) * 0.02 * speed;
                 } else {
-                    this.vx += (Math.random() - 0.5) * 0.2 * energy;
-                    this.vy += (Math.random() - 0.5) * 0.2 * energy;
+                    // Hot: More chaotic movement, faster
+                    this.vx += (Math.random() - 0.5) * 0.06 * speed;
+                    this.vy += (Math.random() - 0.5) * 0.06 * speed;
                 }
                 
-                // Speed limits for stability
-                const maxSpeed = 1 + (Math.abs(currentTemp) / 40);
-                const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-                if (speed > maxSpeed) {
-                    this.vx = (this.vx / speed) * maxSpeed;
-                    this.vy = (this.vy / speed) * maxSpeed;
+                // Apply velocity limits
+                const maxVelocity = 0.8 * (1 + energyFactor);
+                const velocityMagnitude = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                if (velocityMagnitude > maxVelocity) {
+                    this.vx = (this.vx / velocityMagnitude) * maxVelocity;
+                    this.vy = (this.vy / velocityMagnitude) * maxVelocity;
                 }
                 
                 // Update position
@@ -645,33 +648,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.y += this.vy;
                 
                 // Wrap around screen edges
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
             }
             
             draw() {
-                // Color based on temperature
+                // Temperature-based color
                 let r, g, b;
                 if (currentTemp < 0) {
-                    // Cold blue palette
+                    // Cold blue
                     r = 30;
-                    g = 100 + Math.abs(currentTemp);
-                    b = 200 + Math.abs(currentTemp) / 2;
+                    g = 100 + Math.min(Math.abs(currentTemp) * 1.5, 155);
+                    b = 255;
                 } else if (currentTemp > 0) {
-                    // Warm orange/red palette
-                    r = 200 + Math.min(currentTemp, 55);
-                    g = 100 + Math.min(currentTemp / 2, 40);
+                    // Warm red/orange
+                    r = 255;
+                    g = Math.max(70, 150 - currentTemp);
                     b = 30;
                 } else {
-                    // Neutral purple
-                    r = 130;
-                    g = 90;
-                    b = 200;
+                    // Neutral at 0
+                    r = 138;
+                    g = 103;
+                    b = 216;
                 }
                 
-                // Draw with subtle glow
+                // Draw particle with glow effect
                 ctx.shadowBlur = 3;
                 ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.3)`;
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
@@ -682,19 +685,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function createParticles() {
-            // Adjust particle count based on screen size
-            const count = Math.min(Math.floor(width * height / 6000), 200);
             particles = [];
+            const density = window.innerWidth < 768 ? 15000 : 10000;
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / density), 150);
+            
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle());
             }
         }
         
         function animate() {
-            // Use a semi-transparent clear for smooth trails
-            ctx.fillStyle = 'rgba(6, 8, 15, 0.3)';
-            ctx.fillRect(0, 0, width, height);
+            // Semi-transparent clear for trail effect
+            ctx.fillStyle = 'rgba(6, 8, 15, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
+            // Update and draw particles
             particles.forEach(p => {
                 p.update();
                 p.draw();
@@ -703,16 +708,17 @@ document.addEventListener('DOMContentLoaded', function() {
             requestAnimationFrame(animate);
         }
         
-        function updateVisualizer(temp) {
+        // This is the function that will be called when temperature changes
+        function updateBackground(temp) {
             currentTemp = temp;
         }
         
         createParticles();
         animate();
         
-        return { updateVisualizer };
+        return { updateBackground };
     }
 
-    // Add this to your DOMContentLoaded handler
-    const visualizer = initCosmicVisualizer();
+    // Initialize our background and store the reference
+    const cosmicBackground = initCosmicBackground();
 }); 
