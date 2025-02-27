@@ -173,6 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update the physics simulation
         physicsSimulator.updateTemperaturePhysics(celsiusTemp);
+        
+        // Add this line to update the visualizer
+        visualizer.updateVisualizer(celsiusTemp);
     }
     
     function updateSliderFill() {
@@ -573,4 +576,143 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Right after enhanceBackground() call, add:
     const physicsSimulator = initTemperaturePhysics();
+
+    function initCosmicVisualizer() {
+        // Clean implementation of temperature-reactive background
+        const canvas = document.createElement('canvas');
+        canvas.className = 'cosmic-canvas';
+        document.querySelector('.cosmos-container').prepend(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let particles = [];
+        let currentTemp = 0;
+        
+        // Handle resize properly
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            createParticles(); // Recreate particles for new dimensions
+        });
+        
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                // Position randomly but respect screen bounds
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.speed = Math.random() * 0.4 + 0.1;
+                
+                // Set initial velocities
+                this.vx = Math.random() * 0.2 - 0.1;
+                this.vy = Math.random() * 0.2 - 0.1;
+            }
+            
+            update() {
+                // Temperature affects behavior
+                const energy = Math.abs(currentTemp) / 50;
+                
+                // Cold temperature: slower, more orderly movement
+                // Hot temperature: faster, more chaotic movement
+                if (currentTemp < 0) {
+                    this.vx += (Math.random() - 0.5) * 0.05 * energy;
+                    this.vy += (Math.random() - 0.5) * 0.05 * energy;
+                    
+                    // Dampening for cold temps
+                    this.vx *= 0.98;
+                    this.vy *= 0.98;
+                } else {
+                    this.vx += (Math.random() - 0.5) * 0.2 * energy;
+                    this.vy += (Math.random() - 0.5) * 0.2 * energy;
+                }
+                
+                // Speed limits for stability
+                const maxSpeed = 1 + (Math.abs(currentTemp) / 40);
+                const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                if (speed > maxSpeed) {
+                    this.vx = (this.vx / speed) * maxSpeed;
+                    this.vy = (this.vy / speed) * maxSpeed;
+                }
+                
+                // Update position
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Wrap around screen edges
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+            
+            draw() {
+                // Color based on temperature
+                let r, g, b;
+                if (currentTemp < 0) {
+                    // Cold blue palette
+                    r = 30;
+                    g = 100 + Math.abs(currentTemp);
+                    b = 200 + Math.abs(currentTemp) / 2;
+                } else if (currentTemp > 0) {
+                    // Warm orange/red palette
+                    r = 200 + Math.min(currentTemp, 55);
+                    g = 100 + Math.min(currentTemp / 2, 40);
+                    b = 30;
+                } else {
+                    // Neutral purple
+                    r = 130;
+                    g = 90;
+                    b = 200;
+                }
+                
+                // Draw with subtle glow
+                ctx.shadowBlur = 3;
+                ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.3)`;
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function createParticles() {
+            // Adjust particle count based on screen size
+            const count = Math.min(Math.floor(width * height / 6000), 200);
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        function animate() {
+            // Use a semi-transparent clear for smooth trails
+            ctx.fillStyle = 'rgba(6, 8, 15, 0.3)';
+            ctx.fillRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        function updateVisualizer(temp) {
+            currentTemp = temp;
+        }
+        
+        createParticles();
+        animate();
+        
+        return { updateVisualizer };
+    }
+
+    // Add this to your DOMContentLoaded handler
+    const visualizer = initCosmicVisualizer();
 }); 
