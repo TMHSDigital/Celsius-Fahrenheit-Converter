@@ -1217,4 +1217,107 @@ footer {
 
 .modal.active {
     display: flex;
+}
+
+/* Enhanced Background with Nebula Effect */
+body:before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, 
+                rgba(15, 20, 40, 0.2) 0%, 
+                rgba(6, 8, 15, 0.6) 60%, 
+                rgba(6, 8, 15, 0.9) 100%);
+    z-index: -2;
+    pointer-events: none;
+}
+
+.cosmos-container {
+    position: relative;
+    z-index: 0;
+}
+
+/* Add dynamic nebula overlay */
+.nebula-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxmaWx0ZXIgaWQ9ImEiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4wMDUgLjAwMyIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iMzAiIHN0aXRjaFRpbGVzPSJzdGl0Y2giIHJlc3VsdD0idHVyYnVsZW5jZSIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjE1IiBpbj0idHVyYnVsZW5jZSIgcmVzdWx0PSJzcGVjdHJ1bSIvPjxmZUNvbXBvc2l0ZSBvcGVyYXRvcj0iaW4iIGluMj0ib3V0Ii8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50IiBmaWx0ZXI9InVybCgjYSkiIG9wYWNpdHk9Ii4wNSIvPjwvc3ZnPg==');
+    opacity: 0.3;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Enhanced star particles with depth */
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    filter: blur(0.5px);
+    animation: twinkle var(--twinkle-duration) ease-in-out infinite, 
+               drift var(--drift-duration) linear infinite;
+}
+
+.star.distant {
+    opacity: 0.4;
+    width: 1px;
+    height: 1px;
+    filter: blur(0.7px);
+}
+
+.star.medium {
+    opacity: 0.6;
+    width: 2px;
+    height: 2px;
+    filter: blur(0.5px);
+}
+
+.star.close {
+    opacity: 0.9;
+    width: 3px;
+    height: 3px;
+    box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.4);
+}
+
+.star.special {
+    width: 2px;
+    height: 2px;
+    background: linear-gradient(to right, #8a67d8, #d8d867, #67d8c9);
+    opacity: 0.8;
+    filter: blur(0.5px);
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: var(--base-opacity); }
+    50% { opacity: calc(var(--base-opacity) * 0.3); }
+}
+
+@keyframes drift {
+    from { transform: translateX(0px); }
+    to { transform: translateX(calc(-1 * var(--drift-distance))); }
+}
+
+/* Temp-sensitive ambient glow */
+.ambient-gradient {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(138, 103, 216, 0.05) 0%,
+        rgba(6, 8, 15, 0) 70%
+    );
+    mix-blend-mode: screen;
+    transition: background 2s ease-in-out;
+    pointer-events: none;
+    z-index: -1;
 } 

@@ -163,9 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Set ambient gradient color based on temperature
-        ambientGradient.style.background = celsiusTemp < 0 ? 
-            `radial-gradient(circle, transparent 30%, rgba(0, 98, 255, ${Math.min(Math.abs(celsiusTemp) / 100, 0.15)}))` : 
-            `radial-gradient(circle, transparent 30%, rgba(255, 60, 0, ${Math.min(Math.abs(celsiusTemp) / 100, 0.15)}))`;
+        updateAmbientGlow(celsiusTemp);
         
         // Update slider fill
         updateSliderFill();
@@ -311,4 +309,76 @@ document.addEventListener('DOMContentLoaded', function() {
         const height = embedHeight.value;
         embedCode.textContent = `<iframe src="https://tmhsdigital.github.io/Celsius-Fahrenheit-Converter/" width="${width}" height="${height}" frameborder="0" scrolling="no" allow="fullscreen"></iframe>`;
     });
+
+    function enhanceBackground() {
+        // Create nebula overlay
+        const nebulaOverlay = document.createElement('div');
+        nebulaOverlay.classList.add('nebula-overlay');
+        document.body.appendChild(nebulaOverlay);
+        
+        // Create stars with different depths
+        const numStars = window.innerWidth < 768 ? 100 : 200;
+        const starTypes = ['distant', 'medium', 'close', 'special'];
+        
+        const starsContainer = document.createElement('div');
+        starsContainer.className = 'stars-container';
+        starsContainer.style.position = 'fixed';
+        starsContainer.style.top = '0';
+        starsContainer.style.left = '0';
+        starsContainer.style.width = '100%';
+        starsContainer.style.height = '100%';
+        starsContainer.style.zIndex = '-1';
+        starsContainer.style.overflow = 'hidden';
+        document.body.appendChild(starsContainer);
+        
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            const type = starTypes[Math.floor(Math.random() * starTypes.length)];
+            star.classList.add('star', type);
+            
+            // Position
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            
+            // Custom animation properties
+            star.style.setProperty('--base-opacity', 0.4 + Math.random() * 0.6);
+            star.style.setProperty('--twinkle-duration', `${3 + Math.random() * 7}s`);
+            star.style.setProperty('--drift-duration', `${50 + Math.random() * 100}s`);
+            star.style.setProperty('--drift-distance', `${Math.random() * 50}px`);
+            
+            starsContainer.appendChild(star);
+        }
+    }
+
+    function updateAmbientGlow(temperature) {
+        const ambientGradient = document.querySelector('.ambient-gradient');
+        
+        if (temperature < 0) {
+            // Cold
+            const intensity = Math.min(Math.abs(temperature) / 100, 1) * 0.15;
+            ambientGradient.style.background = `radial-gradient(
+                circle at 50% 50%,
+                rgba(0, 136, 255, ${intensity}) 0%,
+                rgba(6, 8, 15, 0) 70%
+            )`;
+        } else if (temperature > 0) {
+            // Hot
+            const intensity = Math.min(temperature / 100, 1) * 0.15;
+            ambientGradient.style.background = `radial-gradient(
+                circle at 50% 50%,
+                rgba(255, 69, 0, ${intensity}) 0%,
+                rgba(6, 8, 15, 0) 70%
+            )`;
+        } else {
+            // Neutral
+            ambientGradient.style.background = `radial-gradient(
+                circle at 50% 50%,
+                rgba(138, 103, 216, 0.05) 0%,
+                rgba(6, 8, 15, 0) 70%
+            )`;
+        }
+    }
+
+    // Call this in your DOMContentLoaded function
+    enhanceBackground();
 }); 
