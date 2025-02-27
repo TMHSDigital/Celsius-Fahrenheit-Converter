@@ -170,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update fact display
         updateFact(celsiusTemp);
+        
+        // Update the physics simulation
+        physicsSimulator.updateTemperaturePhysics(celsiusTemp);
     }
     
     function updateSliderFill() {
@@ -381,4 +384,193 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Call this in your DOMContentLoaded function
     enhanceBackground();
+
+    // Add after enhanceBackground() function
+    function initTemperaturePhysics() {
+        // Create canvas for physics simulation
+        const canvas = document.createElement('canvas');
+        canvas.className = 'physics-canvas';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.querySelector('.cosmos-container').appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouseX = 0, mouseY = 0;
+        let currentTemp = 0;
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Track mouse/touch for interactive forces
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+            }
+        });
+        
+        class Particle {
+            constructor() {
+                this.reset();
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+            }
+            
+            reset() {
+                // Position at random edge
+                const edge = Math.floor(Math.random() * 4);
+                if (edge === 0) { // top
+                    this.x = Math.random() * canvas.width;
+                    this.y = -20;
+                } else if (edge === 1) { // right
+                    this.x = canvas.width + 20;
+                    this.y = Math.random() * canvas.height;
+                } else if (edge === 2) { // bottom
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + 20;
+                } else { // left
+                    this.x = -20;
+                    this.y = Math.random() * canvas.height;
+                }
+                
+                // Initial velocity based on temperature
+                const speed = 0.1 + Math.abs(currentTemp) / 100 * 2;
+                const angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                
+                // Other properties
+                this.size = Math.random() * 3 + 1;
+                this.life = 0;
+                this.maxLife = 100 + Math.random() * 200;
+                this.energy = Math.abs(currentTemp) / 100 + 0.2;
+            }
+            
+            update() {
+                // Apply force toward center
+                const dx = canvas.width / 2 - this.x;
+                const dy = canvas.height / 2 - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                // Temperature affects center gravity
+                const gravity = currentTemp < 0 ? 0.01 : 0.005;
+                this.vx += dx / dist * gravity * this.energy;
+                this.vy += dy / dist * gravity * this.energy;
+                
+                // Apply mouse influence if close enough
+                const mdx = mouseX - this.x;
+                const mdy = mouseY - this.y;
+                const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                
+                if (mdist < 200) {
+                    // Mouse repels if cold, attracts if hot
+                    const force = currentTemp > 0 ? 0.05 : -0.05;
+                    this.vx += mdx / mdist * force;
+                    this.vy += mdy / mdist * force;
+                }
+                
+                // Apply drag
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+                
+                // Update position
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Reset if offscreen or life expired
+                this.life++;
+                if (this.life > this.maxLife || 
+                    this.x < -50 || this.x > canvas.width + 50 || 
+                    this.y < -50 || this.y > canvas.height + 50) {
+                    this.reset();
+                }
+            }
+            
+            draw() {
+                // Opacity based on life
+                const opacity = 1 - (this.life / this.maxLife);
+                
+                // Color based on temperature
+                let r, g, b;
+                if (currentTemp < 0) {
+                    // Cold: blue to cyan
+                    r = 0;
+                    g = 136 + (Math.abs(currentTemp) / 100 * 119);
+                    b = 255;
+                } else if (currentTemp > 0) {
+                    // Hot: orange to red
+                    r = 255;
+                    g = Math.max(69, 180 - (currentTemp / 100 * 111));
+                    b = 0;
+                } else {
+                    // Neutral: purple
+                    r = 138;
+                    g = 103;
+                    b = 216;
+                }
+                
+                // Draw with blur for glow effect
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${opacity * 0.7})`;
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        function createParticles() {
+            const count = window.innerWidth < 768 ? 75 : 150;
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        // Update simulation
+        function updateTemperaturePhysics(temp) {
+            currentTemp = temp;
+            
+            // Update particle behaviors based on temperature
+            particles.forEach(p => {
+                p.energy = Math.abs(currentTemp) / 100 + 0.2;
+                if (Math.random() < 0.01) { // Occasionally reset particles
+                    p.reset();
+                }
+            });
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        createParticles();
+        animate();
+        
+        return {
+            updateTemperaturePhysics
+        };
+    }
+
+    // Right after enhanceBackground() call, add:
+    const physicsSimulator = initTemperaturePhysics();
 }); 
