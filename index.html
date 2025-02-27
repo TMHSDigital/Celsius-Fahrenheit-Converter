@@ -3,37 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Celsius-Fahrenheit Converter</title>
+    <title>Temperature Converter | Professional Tool</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="Professional temperature converter tool for quick Celsius to Fahrenheit conversions">
 </head>
 <body>
-    <div class="container">
-        <h1>Temperature Converter</h1>
-        <div class="converter-box">
-            <div class="input-group">
-                <input type="number" id="celsius" placeholder="Celsius" aria-label="Celsius">
-                <label for="celsius">°C</label>
-            </div>
-            
-            <div class="equals-sign">=</div>
-            
-            <div class="input-group">
-                <input type="number" id="fahrenheit" placeholder="Fahrenheit" aria-label="Fahrenheit">
-                <label for="fahrenheit">°F</label>
-            </div>
-        </div>
-        
-        <div class="formula-box">
-            <div class="formula">
-                <p><strong>Celsius to Fahrenheit:</strong> (°C × 9/5) + 32 = °F</p>
-                <p><strong>Fahrenheit to Celsius:</strong> (°F − 32) × 5/9 = °C</p>
-            </div>
-        </div>
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch">
+        <label for="theme-switch" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </label>
     </div>
+
+    <main class="app-container">
+        <header>
+            <h1 class="app-title">Temperature Converter</h1>
+            <p class="app-subtitle">Quick and precise temperature conversion</p>
+        </header>
+
+        <div class="converter-card">
+            <div class="converter-inputs">
+                <div class="input-unit-wrapper celsius-wrapper">
+                    <div class="input-group">
+                        <input type="number" id="celsius" placeholder="0" aria-label="Celsius value">
+                        <div class="unit-badge">°C</div>
+                    </div>
+                    <p class="unit-label">Celsius</p>
+                </div>
+                
+                <div class="arrow-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                
+                <div class="input-unit-wrapper fahrenheit-wrapper">
+                    <div class="input-group">
+                        <input type="number" id="fahrenheit" placeholder="32" aria-label="Fahrenheit value">
+                        <div class="unit-badge">°F</div>
+                    </div>
+                    <p class="unit-label">Fahrenheit</p>
+                </div>
+            </div>
+
+            <div class="history-display">
+                <p class="history-title">Recent Conversions</p>
+                <ul id="conversion-history" class="history-list">
+                    <!-- Will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+
+        <div class="formula-card">
+            <div class="formula-header">
+                <i class="fas fa-calculator"></i>
+                <h2>Conversion Formulas</h2>
+            </div>
+            <div class="formula-content">
+                <div class="formula-item">
+                    <div class="formula-title">Celsius to Fahrenheit:</div>
+                    <div class="formula-equation">(°C × 9/5) + 32 = °F</div>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-title">Fahrenheit to Celsius:</div>
+                    <div class="formula-equation">(°F − 32) × 5/9 = °C</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <footer>
-        <p>Created by <a href="https://github.com/TMHSDigital" target="_blank" rel="noopener">TMHSDigital</a></p>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <p>Temperature Converter Pro</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/TMHSDigital" target="_blank" rel="noopener" aria-label="GitHub Profile">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/tm-hospitality-strategies/" target="_blank" rel="noopener" aria-label="LinkedIn Company Page">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://www.instagram.com/tmhs.ig/" target="_blank" rel="noopener" aria-label="Instagram Profile">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <div class="footer-copyright">
+                <p>Created by <a href="https://github.com/TMHSDigital" target="_blank" rel="noopener">TMHSDigital</a> &copy; <span id="current-year"></span></p>
+            </div>
+        </div>
     </footer>
+
     <script src="script.js"></script>
 </body>
 </html> 
