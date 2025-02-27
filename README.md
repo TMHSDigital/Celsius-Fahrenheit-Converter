@@ -14,7 +14,7 @@ A professional temperature conversion tool with interactive visual feedback. Tem
   <a href="https://TMHSDigital.github.io/Celsius-Fahrenheit-Converter/">
     <img src="https://raw.githubusercontent.com/TMHSDigital/Celsius-Fahrenheit-Converter/main/preview.gif" alt="TempConvert Pro Demo" width="600">
   </a>
-  <p><em>Live demo visualization (click to try)</em></p>
+  <p><em>Live demo visualization (coming soon)</em></p>
 </div>
 
 [![Star this repo](https://img.shields.io/github/stars/TMHSDigital/Celsius-Fahrenheit-Converter?style=social)](https://github.com/TMHSDigital/Celsius-Fahrenheit-Converter)
