@@ -261,4 +261,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Call this function right after getting your elements
     createParticles();
+
+    // Embed functionality
+    const embedBtn = document.getElementById('embed-button');
+    const embedModal = document.getElementById('embed-modal');
+    const closeBtn = document.querySelector('.close-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const embedCode = document.getElementById('embed-code');
+    const embedWidth = document.getElementById('embed-width');
+    const embedHeight = document.getElementById('embed-height');
+    const updateEmbedBtn = document.getElementById('update-embed');
+    
+    // Show modal when embed button is clicked
+    embedBtn.addEventListener('click', function() {
+        embedModal.classList.add('active');
+    });
+    
+    // Close modal when close button is clicked
+    closeBtn.addEventListener('click', function() {
+        embedModal.classList.remove('active');
+    });
+    
+    // Close modal when clicking outside content
+    embedModal.addEventListener('click', function(e) {
+        if (e.target === embedModal) {
+            embedModal.classList.remove('active');
+        }
+    });
+    
+    // Copy embed code to clipboard
+    copyBtn.addEventListener('click', function() {
+        const range = document.createRange();
+        range.selectNode(embedCode);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" class="btn-icon"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Copied!</span>';
+        setTimeout(function() {
+            copyBtn.innerHTML = originalText;
+        }, 2000);
+    });
+    
+    // Update embed code with new dimensions
+    updateEmbedBtn.addEventListener('click', function() {
+        const width = embedWidth.value;
+        const height = embedHeight.value;
+        embedCode.textContent = `<iframe src="https://tmhsdigital.github.io/Celsius-Fahrenheit-Converter/" width="${width}" height="${height}" frameborder="0" scrolling="no" allow="fullscreen"></iframe>`;
+    });
 }); 
