@@ -582,40 +582,77 @@ footer {
 
 .scale-toggle {
     display: flex;
-    justify-content: center;
+    background: rgba(10, 14, 30, 0.6);
+    border-radius: 12px;
+    padding: 3px;
+    position: relative;
     margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(138, 103, 216, 0.2);
+    backdrop-filter: blur(8px);
 }
 
 .scale-btn {
-    background: none;
-    border: 1px solid var(--glass-border);
+    background: transparent;
     color: var(--text-secondary);
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 500;
-    padding: 6px 16px;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-.scale-btn:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
-
-.scale-btn:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    z-index: 2;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.15em;
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-width: 60px;
 }
 
 .scale-btn.active {
-    background-color: var(--glass-effect);
-    color: var(--text-primary);
-    font-weight: 600;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    letter-spacing: 0.12em;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.scale-btn:before {
+    content: '';
+    display: block;
+    position: absolute;
+    background: var(--neutral-gradient);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scale-btn.active:before {
+    opacity: 1;
+}
+
+.scale-btn:hover {
+    transform: translateY(-1px);
+}
+
+.scale-btn:after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #8a67d8, transparent, #8a67d8);
+    opacity: 0;
+    z-index: -2;
+    transition: opacity 0.3s ease;
+}
+
+.scale-btn.active:after {
+    opacity: 0.7;
+    animation: borderGlow 3s linear infinite;
 }
 
 .temperature-slider-container {
@@ -702,27 +739,57 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 25px;
 }
 
 .preset-btn {
-    background: var(--glass-effect);
-    border: 1px solid var(--glass-border);
-    border-radius: 30px;
-    color: var(--text-secondary);
-    font-family: inherit;
-    font-size: 0.85rem;
-    padding: 6px 12px;
+    background: rgba(20, 30, 60, 0.4);
+    border: 1px solid rgba(138, 103, 216, 0.3);
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .preset-btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: var(--text-primary);
+    background: rgba(138, 103, 216, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(138, 103, 216, 0.3);
+    border-color: rgba(138, 103, 216, 0.6);
+}
+
+.preset-btn:active {
+    transform: translateY(1px);
+}
+
+.preset-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.preset-btn:hover:before {
+    left: 100%;
 }
 
 /* Info Overlay */
@@ -954,4 +1021,17 @@ footer {
     border-radius: 4px;
     background: rgba(138, 103, 216, 0.1);
     border-left: 2px solid var(--neutral-color);
+}
+
+/* Add this for the glow animation */
+@keyframes borderGlow {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 400% 0%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
 } 
