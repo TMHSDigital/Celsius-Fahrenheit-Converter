@@ -29,6 +29,7 @@ A professional temperature conversion tool with interactive visual feedback. Tem
 - **Responsive Design**: Works flawlessly on mobile, tablet, and desktop devices
 - **Visual Feedback**: Color-coded displays that shift from cool blues to warm oranges as temperature changes
 - **Accessibility**: Clear, high-contrast interface with intuitive controls
+- **Embeddable Widget**: Easily embed TempConvert Pro on your own website with customizable dimensions
 
 ## How to Use
 
@@ -37,6 +38,7 @@ A professional temperature conversion tool with interactive visual feedback. Tem
 3. **Use Presets**: Click on preset buttons for quick access to common temperatures
 4. **Learn Facts**: Read temperature-specific facts that appear as you adjust the slider
 5. **Visual Reference**: Observe how the interface elements change color and position based on temperature
+6. **Embed**: Click the "Embed" button to get customizable iframe code for adding TempConvert Pro to your website
 
 ## Technical Implementation
 
