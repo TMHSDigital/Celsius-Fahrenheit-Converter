@@ -105,49 +105,73 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateVisuals(celsiusTemp) {
-        // Determine color based on temperature
-        let r, g, b;
+        // Update temperature displays
+        celsiusValue.textContent = formatNumber(celsiusTemp);
+        fahrenheitValue.textContent = formatNumber(celsiusToFahrenheit(celsiusTemp));
         
-        if (celsiusTemp <= 0) {
-            // Cold: Blue to Purple
-            const factor = Math.min(1, Math.abs(celsiusTemp) / 50);
-            r = Math.round(126 * (1 - factor));
-            g = Math.round(87 * (1 - factor) + 198 * factor);
-            b = Math.round(194 * (1 - factor) + 255 * factor);
+        // Update the central temperature display
+        temperatureValue.textContent = currentScale === 'celsius' ? 
+            formatNumber(celsiusTemp) : 
+            formatNumber(celsiusToFahrenheit(celsiusTemp));
+        
+        // Position sun and ice objects based on temperature
+        const orbitSystem = document.querySelector('.orbit-system');
+        const sunObject = document.querySelector('.sun-object');
+        const iceObject = document.querySelector('.ice-object');
+        const connectorLine = document.querySelector('.connector-line');
+        
+        // Calculate positions (more extreme temperature = objects move further apart)
+        const baseAngle = 90; // degrees
+        const tempFactor = Math.min(Math.abs(celsiusTemp) / 50, 1); // 0 to 1 based on temperature
+        const angleOffset = baseAngle * tempFactor;
+        
+        const angle1 = celsiusTemp >= 0 ? baseAngle - angleOffset : baseAngle + angleOffset;
+        const angle2 = celsiusTemp >= 0 ? baseAngle + angleOffset : baseAngle - angleOffset;
+        
+        const radius = orbitSystem.offsetWidth / 2.5;
+        
+        // Position objects
+        const x1 = radius * Math.cos(angle1 * Math.PI / 180);
+        const y1 = radius * Math.sin(angle1 * Math.PI / 180);
+        sunObject.style.transform = `translate(${x1}px, ${y1}px)`;
+        
+        const x2 = radius * Math.cos(angle2 * Math.PI / 180);
+        const y2 = radius * Math.sin(angle2 * Math.PI / 180);
+        iceObject.style.transform = `translate(${x2}px, ${y2}px)`;
+        
+        // Update orb color based on temperature
+        let color, glow;
+        if (celsiusTemp < -20) {
+            color = 'var(--cold-color)';
+            glow = 'var(--frost-glow)';
+            temperatureOrb.style.background = 'var(--frost-gradient)';
+        } else if (celsiusTemp > 40) {
+            color = 'var(--hot-color)';
+            glow = 'var(--heat-glow)';
+            temperatureOrb.style.background = 'var(--heat-gradient)';
         } else {
-            // Hot: Purple to Red
-            const factor = Math.min(1, celsiusTemp / 50);
-            r = Math.round(126 * (1 - factor) + 255 * factor);
-            g = Math.round(87 * (1 - factor) + 60 * factor);
-            b = Math.round(194 * (1 - factor));
+            // Linear interpolation between cold and hot
+            const t = (celsiusTemp + 20) / 60; // 0 at -20°C, 1 at 40°C
+            temperatureOrb.style.background = `linear-gradient(135deg, 
+                hsl(${195 - t * 195}, ${100 - t * 0}%, ${50 + t * 20}%) 0%, 
+                hsl(${210 - t * 210}, ${100 - t * 0}%, ${30 + t * 40}%) 100%)`;
+            color = `hsl(${195 - t * 160}, 100%, ${50 + t * 15}%)`;
+            
+            const coldOpacity = Math.max(0, 1 - t * 2);
+            const hotOpacity = Math.max(0, t * 2 - 1);
+            glow = `0 0 30px rgba(0, 198, 255, ${coldOpacity}), 0 0 30px rgba(255, 60, 0, ${hotOpacity})`;
         }
         
-        const color = `rgb(${r}, ${g}, ${b})`;
-        const gradient = `linear-gradient(135deg, rgb(${r}, ${g}, ${b}) 0%, rgb(${r*0.7}, ${g*0.7}, ${b*0.7}) 100%)`;
-        const glow = `0 0 30px rgba(${r}, ${g}, ${b}, 0.5)`;
+        // Set ambient gradient color based on temperature
+        ambientGradient.style.background = celsiusTemp < 0 ? 
+            `radial-gradient(circle, transparent 30%, rgba(0, 98, 255, ${Math.min(Math.abs(celsiusTemp) / 100, 0.15)}))` : 
+            `radial-gradient(circle, transparent 30%, rgba(255, 60, 0, ${Math.min(Math.abs(celsiusTemp) / 100, 0.15)}))`;
         
-        // Update temperature orb
-        temperatureOrb.style.background = gradient;
-        temperatureOrb.style.boxShadow = glow;
+        // Update slider fill
+        updateSliderFill();
         
-        // Update slider fill color
-        sliderFill.style.background = gradient;
-        
-        // Update slider thumb color (using CSS variables)
-        document.documentElement.style.setProperty('--neutral-color', color);
-        
-        // Update ambient gradient
-        ambientGradient.style.background = `radial-gradient(circle at center, rgba(${r}, ${g}, ${b}, 0.15) 0%, transparent 50%)`;
-        
-        // Adjust ice and sun objects based on temperature
-        const iceFactor = Math.max(0, 1 - celsiusTemp / 50);
-        const sunFactor = Math.max(0, celsiusTemp / 50);
-        
-        document.querySelector('.ice-object').style.opacity = 0.5 + iceFactor * 0.5;
-        document.querySelector('.ice-object').style.transform = `scale(${0.8 + iceFactor * 0.4})`;
-        
-        document.querySelector('.sun-object').style.opacity = 0.5 + sunFactor * 0.5;
-        document.querySelector('.sun-object').style.transform = `scale(${0.8 + sunFactor * 0.4})`;
+        // Update fact display
+        updateFact(celsiusTemp);
     }
     
     function updateSliderFill() {
@@ -211,4 +235,30 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatNumber(number) {
         return Math.round(number * 10) / 10;
     }
+
+    // Add after the DOM content loaded event listener but before any other code
+    function createParticles() {
+        const particlesContainer = document.querySelector('.ambient-particles');
+        const particleCount = 100;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random positioning and size
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.width = `${Math.random() * 3 + 1}px`;
+            particle.style.height = particle.style.width;
+            
+            // Random animation duration and delay
+            particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // Call this function right after getting your elements
+    createParticles();
 }); 
