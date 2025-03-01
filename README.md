@@ -120,7 +120,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/TMHSDigital">TMHSDigital</a></p>
+  <p>Made by <a href="https://github.com/TMHSDigital">TMHSDigital</a></p>
   <p>
     <a href="https://github.com/TMHSDigital"><img src="https://img.shields.io/github/followers/TMHSDigital?label=Follow&style=social" alt="GitHub"></a>
     <a href="https://www.linkedin.com/company/tm-hospitality-strategies/"><img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=social&logo=linkedin" alt="LinkedIn"></a>
